@@ -3,10 +3,13 @@ services:
   anaconda:  #環境変数
     build: .  # カレントフォルダーを「.」を書く。これによりDockerfileを使ってイメージが作成される。
     image: anaconda3
-    ports:
-      - "7777:8888"
+    #ports:
+    #  - "7777:8888"
+    # docker container run --publish 7777:8888 anaconda3でブラウザでjuputer notebookが使える
+    expose:
+      - 8888
     container_name: anaconda3
-    working_dir: '/root/'
+    working_dir: '/app/'
     tty: true
     volumes:
       - ./app:/usr/src/app
