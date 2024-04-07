@@ -4,6 +4,9 @@ class Car(object):
 
     def run(self):
         print("run")
+    
+    def ride(self, person):
+        person.drive()
 
 
 class MyCar(Car):
@@ -12,9 +15,10 @@ class MyCar(Car):
 
 
 class AdvancedCar(Car):
-    def __init__(self, model='SUV', enable_auto_run=False) -> None:
+    def __init__(self, model='SUV', enable_auto_run=False,password='123') -> None:
         super().__init__(model)
-        self._enable_auto_run = enable_auto_run
+        self.__enable_auto_run = enable_auto_run
+        self.password = password
 
     def auto_run(self):
         print("auto run")
@@ -24,4 +28,11 @@ class AdvancedCar(Car):
 
     @property
     def enable_auto_run(self):
-        return self._enable_auto_run
+        return self.__enable_auto_run
+    
+    @enable_auto_run.setter
+    def enable_auto_run(self, is_enable):
+        if self.password == '345':
+            self.__enable_auto_run = is_enable
+        else:
+            raise ValueError
