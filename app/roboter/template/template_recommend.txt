@@ -1,0 +1,7 @@
+===============================================
+私のおすすめの店は$recommend_restaurantです。
+I recommend Japanese $recommend_restaurant.
+
+このレストランは好きですか? [Yes/No]
+Do you like it?[y/n]
+===============================================
