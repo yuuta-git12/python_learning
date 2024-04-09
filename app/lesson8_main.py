@@ -33,8 +33,9 @@ if os.path.exists(CSV_PATH):
     with open(CSV_PATH, "r+", newline="") as csv_file:
         reader = csv.DictReader(csv_file)
         row_count = sum(1 for row in reader)
+        # csvファイルにデータがない場合
         if row_count < 2:
-            with open(LIKE_PATH, 'r') as f2:
+            with open(LIKE_PATH, "r") as f2:
                 t2 = string.Template(f2.read())
                 print(t2.substitute(name=input_name))
                 input_restaurant = input()
@@ -44,18 +45,29 @@ if os.path.exists(CSV_PATH):
                 writer.writerow({"NAME": input_restaurant, "COUNT": "1"})
         else:
             # COUNTが最大のレストラン名を表示
-            read_recommend_restaurant = recommend_restaurant()
-            with open(RECOMMEND_PATH, 'r') as f3:
-                t3 = string.Template(f3.read())
-                print(t3.substitute(recommend_restaurant=read_recommend_restaurant))
-            
-            # yes/noの場合の処理を記述する
-            # yes 処理終了のメッセージ
-            # no 他のおすすめのレストランを表示する
+            read_recommend_restaurants = recommend_restaurant()
+            i = 0
+            input_key = "n"
+            while i < len(read_recommend_restaurants) and input_key == "n":
+                with open(RECOMMEND_PATH, "r") as f3:
+                    t3 = string.Template(f3.read())
+                    print(
+                        t3.substitute(
+                            recommend_restaurant=read_recommend_restaurants[i]["NAME"]
+                        )
+                    )
+                i = i + 1
+                input_key = input()
+
             # 好きなレストランの質問処理を入れる
-
-
-
+            with open(LIKE_PATH, "r") as f4:
+                t4 = string.Template(f4.read())
+                print(t4.substitute(name=input_name))
+                input_restaurant = input()
+                fieldnames = ["NAME", "COUNT"]
+                # リストの中に入力したレストランが存在するか否かの判定
+                writer = csv.DictWriter(csv_file, fieldnames)
+                writer.writerow({"NAME": input_restaurant, "COUNT": "1"})
 
 
 # with open("/usr/src/app/roboter/template_thank_you.txt") as f3:
