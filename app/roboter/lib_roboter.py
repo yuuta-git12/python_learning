@@ -28,14 +28,39 @@ def restaurant_in_list(list=[], name=""):
     return name in list_restaurant
 
 
+# CSVファイルの更新処理
+# https://algorithm.joho.info/programming/python/csv-update/
+def update_list(list, data):
+    for i in range(len(list)):
+        if list[i]['NAME'] == data['NAME']:
+            data['COUNT'] = int(list[i]['COUNT']) + 1
+            list[i] = data
+    return list
 
 
-# # テストコード
-list_test = recommend_restaurant()
+# # テストコード(ranking.csvのレストランのCOUNTアップ処理のテスト)
 
-test_val = "Japanese Test"
+# ranking.csvのリストへの読み込み
+with open(CSV_PATH, "r+", newline="") as csv_file:
+    list_test = []
+    reader = csv.DictReader(csv_file)
+    for row in reader:
+        list_test.append(row)
 
-print(restaurant_in_list(list=list_test, name="0o"))
+print(list_test)
+print(len(list_test))
+test_val = "kisa"
+
+flag = restaurant_in_list(list=list_test, name=test_val)
+
+if flag:
+    dict = {"NAME": test_val, "COUNT": "0"}
+    new_list = update_list(list_test, dict)
+    with open(CSV_PATH, "w", newline="") as csv_file:
+        fieldnames = ["NAME", "COUNT"]
+        writer = csv.DictWriter(csv_file, fieldnames)
+        writer.writeheader()
+        writer.writerows(new_list)
 
 
 # # リストの中に入力値が含まれるか確認
