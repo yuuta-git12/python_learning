@@ -48,7 +48,7 @@ if os.path.exists(CSV_PATH):
             read_recommend_restaurants = recommend_restaurant()
             i = 0
             input_key = "n"
-            while i < len(read_recommend_restaurants) and input_key == "n":
+            while i < len(read_recommend_restaurants) and (input_key == "n" or input_key == "no"):
                 with open(RECOMMEND_PATH, "r") as f3:
                     t3 = string.Template(f3.read())
                     print(
@@ -58,7 +58,12 @@ if os.path.exists(CSV_PATH):
                     )
                 i = i + 1
                 input_key = input()
-
+            
+            
+            # CSVファイルにデータがない
+            # 好きなレストランを回答ずみ(yes or yを回答)
+            # 他におすすめのレストランが存在しない
+            
             # 好きなレストランの質問処理を入れる
             with open(LIKE_PATH, "r") as f4:
                 t4 = string.Template(f4.read())

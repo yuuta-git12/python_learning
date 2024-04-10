@@ -21,11 +21,13 @@ def recommend_restaurant():
 
 
 # レストラン名だけのリストに入力したレストラン名が存在するか否かを返すメソッド
-def restaurant_in_list(list=[], restaurang_name=""):
+def restaurant_in_list(list=[], name=""):
     list_restaurant = []
     for val in list:
         list_restaurant.append(val["NAME"])
-    return restaurang_name in list_restaurant
+    return name in list_restaurant
+
+
 
 
 # # テストコード
@@ -33,7 +35,7 @@ list_test = recommend_restaurant()
 
 test_val = "Japanese Test"
 
-print(restaurant_in_list(list=list_test, restaurang_name="0o"))
+print(restaurant_in_list(list=list_test, name="0o"))
 
 
 # # リストの中に入力値が含まれるか確認
