@@ -21,9 +21,9 @@ def recommend_restaurant():
 
 
 # レストラン名だけのリストに入力したレストラン名が存在するか否かを返すメソッド
-def restaurant_in_list(list=[], name=""):
+def restaurant_in_list(dict=[], name=""):
     list_restaurant = []
-    for val in list:
+    for val in dict:
         list_restaurant.append(val["NAME"])
     return name in list_restaurant
 
@@ -37,6 +37,9 @@ def update_list(list, data):
             list[i] = data
     return list
 
+# CSVファイルにデータを書き込む処理
+# def write_csv():
+    
 
 # # テストコード(ranking.csvのレストランのCOUNTアップ処理のテスト)
 
@@ -50,19 +53,21 @@ with open(CSV_PATH, "r+", newline="") as csv_file:
 print(list_test)
 print(len(list_test))
 test_val = "kisa"
+print(list_test)
+flag = restaurant_in_list(dict=list_test, name=test_val)
+print(flag)
 
-flag = restaurant_in_list(list=list_test, name=test_val)
+# if flag:
+#     dict = {"NAME": test_val, "COUNT": "0"}
+#     new_list = update_list(list_test, dict)
+#     with open(CSV_PATH, "w", newline="") as csv_file:
+#         fieldnames = ["NAME", "COUNT"]
+#         writer = csv.DictWriter(csv_file, fieldnames)
+#         writer.writeheader()
+#         writer.writerows(new_list)
 
-if flag:
-    dict = {"NAME": test_val, "COUNT": "0"}
-    new_list = update_list(list_test, dict)
-    with open(CSV_PATH, "w", newline="") as csv_file:
-        fieldnames = ["NAME", "COUNT"]
-        writer = csv.DictWriter(csv_file, fieldnames)
-        writer.writeheader()
-        writer.writerows(new_list)
-
-
+# dict_recommend_restaurants = recommend_restaurant()
+# print(dict_recommend_restaurants)
 # # リストの中に入力値が含まれるか確認
 # print(test_val in list_val)
 
@@ -79,3 +84,15 @@ if flag:
 #     print(list[i]['NAME'])
 #     i = i + 1
 #     input_val = input()
+
+# csvの行数、csvの中身を辞書型で返す
+# 複数の戻り値が使えるか確認
+with open(CSV_PATH, "r", newline="") as csv_file:
+    dict_restaurants = []
+    reader = csv.DictReader(csv_file)
+    row_count = 0
+    for row in reader:
+        dict_restaurants.append(row)
+        row_count += 1
+    print(dict_restaurants)
+    print(row_count)
