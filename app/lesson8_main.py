@@ -15,6 +15,8 @@ import os
 from roboter.lib_roboter import recommend_restaurant
 from roboter.lib_roboter import restaurant_in_list
 from roboter.lib_roboter import update_list
+from roboter.lib_roboter import read_csv
+from roboter.lib_roboter import write_csv
 
 CSV_PATH = "/usr/src/app/roboter/ranking.csv"
 HELLO_PATH = "/usr/src/app/roboter/template/template_hello.txt"
@@ -30,22 +32,17 @@ with open(HELLO_PATH) as f1:
 
 # CSVファイルがあるか確認
 if os.path.exists(CSV_PATH):
-    with open(CSV_PATH, "r", newline="") as csv_file:
-        dict_restaurants = []
-        reader = csv.DictReader(csv_file)
-        row_count = sum(1 for row in reader)
-        dict_restaurants.append(row for row in reader)
-        print(dict_restaurants)
+    read_data = read_csv()
+    row_count = read_data[1]
+    dict_restaurants = read_data[0]
     # csvファイルにデータがない場合
-    if row_count < 2:
+    if row_count < 1:
         with open(LIKE_PATH, "r") as f2:
             t2 = string.Template(f2.read())
             print(t2.substitute(name=input_name))
+            # 単語の頭文字が大文字になるようにする
             input_restaurant = input()
-            fieldnames = ["NAME", "COUNT"]
-            writer = csv.DictWriter(csv_file, fieldnames)
-            writer.writeheader()
-            writer.writerow({"NAME": input_restaurant, "COUNT": "1"})     
+            write_csv(input_restaurant, 1, False)
     else:
         # COUNTが最大のレストラン名を表示
         dict_recommend_restaurants = recommend_restaurant()
@@ -67,19 +64,18 @@ if os.path.exists(CSV_PATH):
         with open(LIKE_PATH, "r") as f4:
             t4 = string.Template(f4.read())
             print(t4.substitute(name=input_name))
+            # 単語の頭文字が大文字になるようにする
             input_restaurant = input()
-            print(dict_restaurants)
             flag = restaurant_in_list(dict=dict_restaurants, name=input_restaurant)
             if flag:
                 dict = {"NAME": input_restaurant, "COUNT": "0"}
                 new_list = update_list(dict_restaurants, dict)
-                fieldnames = ["NAME", "COUNT"]
-                writer = csv.DictWriter(csv_file, fieldnames)
-                writer.writerows(new_list)
+                with open(CSV_PATH, "w", newline="") as csv_file:
+                    fieldnames = ["NAME", "COUNT"]
+                    writer = csv.DictWriter(csv_file, fieldnames)
+                    writer.writerows(new_list)
             else:
-                fieldnames = ["NAME", "COUNT"]
-                writer = csv.DictWriter(csv_file, fieldnames)
-                writer.writerow({"NAME": input_restaurant, "COUNT": "1"})  
+                write_csv(input_restaurant, 1, True)
 else:
     print("エラー：CSVファイルが存在しません")
 
