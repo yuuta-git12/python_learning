@@ -17,6 +17,7 @@ from roboter.lib_roboter import restaurant_in_list
 from roboter.lib_roboter import update_list
 from roboter.lib_roboter import read_csv
 from roboter.lib_roboter import write_csv
+from roboter.lib_roboter import titlecase
 
 CSV_PATH = "/usr/src/app/roboter/ranking.csv"
 HELLO_PATH = "/usr/src/app/roboter/template/template_hello.txt"
@@ -41,7 +42,7 @@ if os.path.exists(CSV_PATH):
             t2 = string.Template(f2.read())
             print(t2.substitute(name=input_name))
             # 単語の頭文字が大文字になるようにする
-            input_restaurant = input()
+            input_restaurant = titlecase(input())
             write_csv(input_restaurant, 1, False)
     else:
         # COUNTが最大のレストラン名を表示
@@ -49,7 +50,7 @@ if os.path.exists(CSV_PATH):
         i = 0
         input_key = "n"
         while i < len(dict_recommend_restaurants) and (
-            input_key == "n" or input_key == "no"
+            input_key == "n" or input_key == "No"
         ):
             with open(RECOMMEND_PATH, "r") as f3:
                 t3 = string.Template(f3.read())
@@ -61,21 +62,24 @@ if os.path.exists(CSV_PATH):
             i = i + 1
             input_key = input()
         # 好きなレストランの質問処理を入れる
-        with open(LIKE_PATH, "r") as f4:
-            t4 = string.Template(f4.read())
-            print(t4.substitute(name=input_name))
-            # 単語の頭文字が大文字になるようにする
-            input_restaurant = input()
-            flag = restaurant_in_list(dict=dict_restaurants, name=input_restaurant)
-            if flag:
-                dict = {"NAME": input_restaurant, "COUNT": "0"}
-                new_list = update_list(dict_restaurants, dict)
-                with open(CSV_PATH, "w", newline="") as csv_file:
-                    fieldnames = ["NAME", "COUNT"]
-                    writer = csv.DictWriter(csv_file, fieldnames)
-                    writer.writerows(new_list)
-            else:
-                write_csv(input_restaurant, 1, True)
+        if input_key == "y" or input_key == "Yes":
+            with open(LIKE_PATH, "r") as f4:
+                t4 = string.Template(f4.read())
+                print(t4.substitute(name=input_name))
+                input_restaurant = titlecase(input())
+                flag = restaurant_in_list(dict=dict_restaurants, name=input_restaurant)
+                if flag:
+                    dict = {"NAME": input_restaurant, "COUNT": "0"}
+                    new_list = update_list(dict_restaurants, dict)
+                    with open(CSV_PATH, "w", newline="") as csv_file:
+                        fieldnames = ["NAME", "COUNT"]
+                        writer = csv.DictWriter(csv_file, fieldnames)
+                        writer.writeheader()
+                        writer.writerows(new_list)
+                else:
+                    write_csv(input_restaurant, 1, True)
+        else:
+            print("エラー：このキーは受け付けられません")
 else:
     print("エラー：CSVファイルが存在しません")
 
@@ -83,5 +87,3 @@ else:
 with open(THANK_PATH, "r") as f5:
     t5 = string.Template(f5.read())
     print(t5.substitute(name=input_name))
-    
-

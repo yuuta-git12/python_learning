@@ -1,5 +1,6 @@
 import csv
 import os
+import re
 
 CSV_PATH = "/usr/src/app/roboter/ranking.csv"
 
@@ -38,20 +39,6 @@ def update_list(list, data):
     return list
 
 
-# CSVファイルにデータを書き込む処理
-# def write_csv():
-
-
-# # テストコード(ranking.csvのレストランのCOUNTアップ処理のテスト)
-
-# ranking.csvのリストへの読み込み
-with open(CSV_PATH, "r+", newline="") as csv_file:
-    list_test = []
-    reader = csv.DictReader(csv_file)
-    for row in reader:
-        list_test.append(row)
-
-
 # csvの行数、csvの中身を辞書型で返す
 # 複数の戻り値が使えるか確認
 def read_csv():
@@ -80,3 +67,8 @@ def write_csv(input_restaurant, count, update_flag=False):
             writer = csv.DictWriter(csv_file, fieldnames)
             writer.writerow({"NAME": input_restaurant, "COUNT": count})
 
+
+# レストラン名の頭文字を大文字にする処理
+def titlecase(s):
+    return re.sub(r"[A-Za-z]+('[A-Za-z]+)?", 
+                  lambda mo: mo.group(0).capitalize(), s)
