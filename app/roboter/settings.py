@@ -1,0 +1,2 @@
+TEMPLATE_PATH = None
+CSV_FILE_PATH = None

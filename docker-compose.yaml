@@ -9,7 +9,7 @@ services:
     expose:
       - 8888
     container_name: anaconda3
-    working_dir: '/app/'
+    working_dir: '/usr/src/app/'
     tty: true
     volumes:
       - ./app:/usr/src/app
